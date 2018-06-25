@@ -1,0 +1,62 @@
+# Name:		mothur_classify_contigs.batch
+# Author:	Tom van Wijk - RIVM Bilthoven
+# Date:		12-09-2017
+# Licence:	GNU General Public License v3.0 (copy provided in directory)
+
+
+############################## DESCRIPTION ##############################
+
+# This batch script is a subscript of amplicon_pipeline.py and is
+# executed with mothur during the amplicon pipeline to process the
+# amplicon sequence data and classify the contigs. For more information
+# check README.md or comment section in amplicon_pipeline.py
+
+
+# Setting parameters, the placeholders are replaced with the appropriate values by amplicon_pipeline.py
+set.current(processors=processors_placeholder)
+set.dir(input=directory_placeholder)
+set.dir(output=directory_placeholder)
+set.dir(tempdefault=directory_placeholder)
+
+# Assemble the forward and reverse reads
+make.contigs(file=mothur.samplesheet)
+summary.seqs(fasta=current)
+
+# Screen contigs on length and cluster unique sequences
+screen.seqs(fasta=current, group=current, maxambig=0, minlength=min_seq_size_placeholder, maxlength=max_seq_size_placeholder)
+unique.seqs(fasta=current)
+count.seqs(name=current, group=current)
+summary.seqs(count=current)
+
+# Create an alignment of the contigs using the appropriate reference database for your amplicon
+align.seqs(fasta=current, reference=alignment_database_placeholder)
+summary.seqs(count=current)
+
+# Trim and optimise the alignment and re-cluster unique sequences
+screen.seqs(fasta=current, count=current, optimize=start-end, criteria=90)
+filter.seqs(fasta=current, vertical=T, trump=.)
+unique.seqs(fasta=current, count=current)
+summary.seqs(count=current)
+
+# Cluster the sequences with a max variation of 2 nucleotides
+pre.cluster(fasta=current, count=current, diffs=2)
+summary.seqs(count=current)
+
+# Remove chimera's (incorrectly assembled contigs)
+chimera.vsearch(fasta=current, count=current, dereplicate=t)
+remove.seqs(fasta=current, accnos=current)
+summary.seqs(count=current)
+
+# Classify the contigs using RPD as a reference database
+classify.seqs(fasta=current, count=current, reference=classification_database_fasta_placeholder, taxonomy=classification_database_tax_placeholder, cutoff=80)
+summary.seqs(count=current)
+
+# Revome undesireables
+remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota)
+summary.seqs(count=current)
+
+# Create taxonomy summary file
+summary.tax(taxonomy=current, count=current)
+
+# Exiting mothur
+quit()
