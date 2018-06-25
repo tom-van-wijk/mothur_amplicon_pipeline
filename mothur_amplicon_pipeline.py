@@ -284,18 +284,17 @@ def run_mothur_classify(workdir, amplicon_name, threads, log):
 	classification_reference_database_fasta = {"16sv4":"trainset16_022016.pds.fasta", "16sv34":"trainset16_022016.pds.fasta"}
 	classification_reference_database_tax = {"16sv4":"trainset16_022016.pds.tax", "16sv34":"trainset16_022016.pds.tax"}
 	# Get the location of the MOTHUR_AMPLICON_REF path variable
-	refpath = os.environ['MOTHUR_AMPLICON_REF']
-	scriptpath = str(os.environ['MOTHUR_AMPLICON_REF']).replace("/reference_files", "")
+	path = os.environ['MOTHUR_AMPLICON_HOME']
 	# Create a personalised mothur batch scipt for this pipeline run
 	log.info ("Creating personalised mothur script...")
-	os.system("cp "+scriptpath+"/mothur_classify_contigs.batch "+workdir+"/mothur_classify_contigs_personalised.batch")
+	os.system("cp "+path+"/mothur_classify_contigs.batch "+workdir+"/mothur_classify_contigs_personalised.batch")
 	os.system("sed -i 's/processors_placeholder/"+str(threads)+"/g' "+workdir+"/mothur_classify_contigs_personalised.batch")
 	os.system("sed -i 's?directory_placeholder?"+workdir+"?g' "+workdir+"/mothur_classify_contigs_personalised.batch")
 	os.system("sed -i 's/min_seq_size_placeholder/"+str(min_seq_size[amplicon_name.lower()])+"/g' "+workdir+"/mothur_classify_contigs_personalised.batch")
 	os.system("sed -i 's/max_seq_size_placeholder/"+str(max_seq_size[amplicon_name.lower()])+"/g' "+workdir+"/mothur_classify_contigs_personalised.batch")
-	os.system("sed -i 's|alignment_database_placeholder|"+refpath+"/"+str(alignment_reference_database[amplicon_name.lower()])+"|g' "+workdir+"/mothur_classify_contigs_personalised.batch")
-	os.system("sed -i 's|classification_database_fasta_placeholder|"+refpath+"/"+str(classification_reference_database_fasta[amplicon_name.lower()])+"|g' "+workdir+"/mothur_classify_contigs_personalised.batch")
-	os.system("sed -i 's|classification_database_tax_placeholder|"+refpath+"/"+str(classification_reference_database_tax[amplicon_name.lower()])+"|g' "+workdir+"/mothur_classify_contigs_personalised.batch")
+	os.system("sed -i 's|alignment_database_placeholder|"+path+"/"+str(alignment_reference_database[amplicon_name.lower()])+"|g' "+workdir+"/mothur_classify_contigs_personalised.batch")
+	os.system("sed -i 's|classification_database_fasta_placeholder|"+path+"/"+str(classification_reference_database_fasta[amplicon_name.lower()])+"|g' "+workdir+"/mothur_classify_contigs_personalised.batch")
+	os.system("sed -i 's|classification_database_tax_placeholder|"+path+"/"+str(classification_reference_database_tax[amplicon_name.lower()])+"|g' "+workdir+"/mothur_classify_contigs_personalised.batch")
 	# logging parameters and preparing/logging mothur command
 	log.info ("Selected parameters for amplicon '%s'\nmin_seq_size:\t%s\nmax_seq_size:\t%s\nalignment reference database:\t%s\nclassification reference database:\t%s\nNo.of threads:\t%s"
 			% (amplicon_name, min_seq_size[amplicon_name.lower()],max_seq_size[amplicon_name.lower()], alignment_reference_database[amplicon_name.lower()],

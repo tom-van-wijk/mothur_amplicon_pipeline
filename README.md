@@ -28,10 +28,10 @@ and Illumina paired-end data are supported.<br />
 -	Add the location of the mothur_amplicon_pipeline directory to the PATH variable:<br />
 	`export PATH=$PATH:/path/to/mothur_amplicon_pipeline`<br />
 	(It is recommended to add this command to your ~/.bashrc file)
--	Create path variable MOTHUR_AMPLICON_REF to the mothur_amplicon_pipeline reference directory:<br />
-	`export MOTHUR_AMPLICON_REF=/path/to/mothur_amplicon_pipeline/reference_files`<br />
+-	Create path variable MOTHUR_AMPLICON_HOME to the mothur_amplicon_pipeline directory:<br />
+	`export MOTHUR_AMPLICON_HOME=/path/to/mothur_amplicon_pipeline`<br />
 	(It is recommended to add this command to your ~/.bashrc file)
--	Extract the database files in the reference_files directory, they are used as reference.
+-	Extract the database files, they are used as reference.
 
 ### USAGE
 
