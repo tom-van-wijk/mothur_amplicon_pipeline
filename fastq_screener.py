@@ -2,7 +2,7 @@
 
 
 # Name:         fastq_screener.py
-# Author:       Tom van Wijk - RIVM Bilthoven
+# Author:       Tom van Wijk
 # Date:         19-12-2017
 # Licence:      GNU General Public License v3.0 (copy provided in directory)
 
